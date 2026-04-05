@@ -1,16 +1,15 @@
 # Multi-agent System Design
 
 ## Table of Contents
-
-1. [Introduction](#1-what-it-is)
-2. [Pipeline Flow](#2-pipeline-execution-flow)
-3. [Agent Tiers & Model Config](#3-agent-tiers--model-config)
-4. [Hardware](#4-hardware)
-5. [Network](#5-network)
-6. [Services on Machine D](#6-services-on-machine-d)
-7. [Deployment — Step by Step](#7-deployment--step-by-step)
-8. [OpenClaw Workstation CLI](#8-openclaw-workstation-cli)
-9. [Observability](#9-observability)
+1. [Introduction](#introduction)
+2. [Pipeline Flow](#pipeline-flow)
+3. [Agent Tiers & Model Config](#agent-tiers--model-config)
+4. [Hardware](#hardware)
+5. [Network](#network)
+6. [Services on Machine D](#services-on-machine-d)
+7. [Deployment](#deployment)
+8. [OpenClaw Workstation CLI](#openclaw-workstation-cli)
+9. [Observability](#observability)
 
 # Introduction
 
@@ -18,7 +17,7 @@ A self-hosted multi-agent LLM inference system. A commercial API (Claude Sonnet 
 
 The system exposes a single HTTP API. Clients POST a query; the system decomposes it, executes subtasks in parallel across GPU servers, and returns a validated response.
 
-# Pipeline Execution Flow
+# Pipeline Flow
 
 ```
 POST /run {"query": "..."}
@@ -55,24 +54,14 @@ POST /run {"query": "..."}
 
 # Agent Tiers & Model Config
 
-| Agent | Model | Quant | Hardware | Port | Context | Temp |
-|---|---|---|---|---|---|---|
-| Orchestrator | Claude Sonnet 4.6 | — | Anthropic API | — | 1M | 0.1 |
-| Fallback Orch | Qwen3.5 27B | AWQ INT4 | Dell R740xd | 8002 | 32,768 | 0.1 |
-| Critic | Llama 3.3 70B | AWQ INT4 | Dell R740 | 8001 | 65,536 | 0.1 |
-| Sub-agent A | Qwen3.5 4B | FP16 | Dell R7920 | 8003 | 16,384 | 0.1 |
-| Sub-agent B | Qwen3.5 4B | FP16 | Dell R7920 | 8004 | 16,384 | 0.1 |
-
-
-# Hardware
-
-| Machine | Server | CPU | RAM | GPU | Data IP |
-|---|---|---|---|---|---|
-| A | Dell R740 | 2× Xeon Platinum 8168 | 256 GB | 2× NVIDIA A6000 48 GB | 192.168.10.10 |
-| B | Dell R740xd | 2× Xeon Platinum 8168 | 256 GB | 2× NVIDIA A4000 16 GB | 192.168.10.20 |
-| C | Dell R7920 | 2× Xeon Silver 4110 | 256 GB | 2× NVIDIA V100 16 GB PCIe | 192.168.10.30 |
-| D | Dell R6515 | 1× AMD EPYC 7713P | 256 GB | — | 192.168.10.40 |
-
+| Agent | Model | Quant | Hardware | Port | Context | Temp | CPU | RAM | GPU | Data IP |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Orchestrator | Claude Sonnet 4.6 | — | Anthropic API | — | 1M | 0.1 | - | - | - | - |
+| Fallback Orch | Qwen3.5 27B | AWQ INT4 | Dell R740xd | 8002 | 32,768 | 0.1 | 2× Xeon Platinum 8168 | 256 GB | 2× NVIDIA GPUs | 192.168.10.20 |
+| Critic | Llama 3.3 70B | AWQ INT4 | Dell R740 | 8001 | 65,536 | 0.1 | 2× Xeon Platinum 8168 | 256 GB | 2× NVIDIA GPUs| 192.168.10.10 |
+| Sub-agent A | Qwen3.5 4B | FP16 | Dell R7920 | 8003 | 16,384 | 0.1 | 2× Xeon Silver 4110 | 256 GB | NVIDIA GPUs:0 | 192.168.10.30 |
+| Sub-agent B | Qwen3.5 4B | FP16 | Dell R7920 | 8004 | 16,384 | 0.1 | 2× Xeon Silver 4110 | 256 GB | NVIDIA GPUs:1 | 192.168.10.30 |
+| Machine D | - | - | Dell R6515 | - | - | - | 1× AMD EPYC 7713P | 256 GB | - | 192.168.10.40 |
 
 # Network
 
@@ -117,7 +106,7 @@ docker-compose.yml
                              sends email via msmtp on first failure and on recovery
 ```
 
-# Deployment — Step by Step
+# Deployment
 
 ### Step 1 — Configure network (do this first)
 

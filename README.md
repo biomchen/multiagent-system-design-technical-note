@@ -58,7 +58,7 @@ POST /run {"query": "..."}
 | Device | Model | Role |
 |---|---|---|
 | Router / Firewall | Ubiquiti UDM Pro | WAN, inter-VLAN routing, UniFi controller, ACL enforcement |
-| Data-plane switch | MikroTik CRS510-8XS-2XQ-IN | 8× SFP28 25 GbE (servers) + 2× QSFP28 100 GbE (future) |
+| Data-plane switch | MikroTik CRS510-8XS-2XQ-IN | 8× SFP28 25 GbE (servers) + 2× QSFP28 100 GbE |
 | Management switch | Ubiquiti USW-48-Pro | 48× 1 GbE (management NICs, iDRAC), UniFi managed |
 
 ### VLANs

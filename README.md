@@ -1,23 +1,13 @@
-# Multi-agent System Design
+# Multi-Agent System Design
+This design is for a home lab experiment.
 
-## Table of Contents
-1. [Introduction](#introduction)
-2. [Pipeline Flow](#pipeline-flow)
-3. [Agent Tiers & Model Config](#agent-tiers--model-config)
-4. [Hardware](#hardware)
-5. [Network](#network)
-6. [Services on Machine D](#services-on-machine-d)
-7. [Deployment](#deployment)
-8. [OpenClaw Workstation CLI](#openclaw-workstation-cli)
-9. [Observability](#observability)
-
-# Introduction
+## Introduction
 
 A self-hosted multi-agent LLM inference system. A commercial API (Claude Sonnet 4.6) acts as the primary orchestrator; locally hosted open-weight models on three GPU servers handle task execution and critic validation. All coordination, routing, logging, monitoring, and proxying runs as Docker containers on a single EPYC-based control-plane server.
 
 The system exposes a single HTTP API. Clients POST a query; the system decomposes it, executes subtasks in parallel across GPU servers, and returns a validated response.
 
-# Pipeline Flow
+## Pipeline Flow
 
 ```
 POST /run {"query": "..."}
@@ -52,7 +42,7 @@ POST /run {"query": "..."}
                      Final response + pipeline_id
 ```
 
-# Agent Tiers & Model Config
+## Agent Tiers & Model Config
 
 | Agent | Model | Quant | Hardware | Port | Context | CPU | RAM | GPU | Data IP |
 |---|---|---|---|---|---|---|---|---|---|
@@ -63,7 +53,7 @@ POST /run {"query": "..."}
 | Sub-agent B | Qwen3.5 4B | FP16 | Dell R7920 | 8004 | 16,384 | 2× Xeon 4110 | 256 GB | NVIDIA GPUs:1 | 192.168.10.30 |
 | Machine D | - | - | Dell R6515 | - | - | 1× AMD 7713P | 256 GB | - | 192.168.10.40 |
 
-# Network
+## Network
 
 | Device | Model | Role |
 |---|---|---|
@@ -89,7 +79,7 @@ POST /run {"query": "..."}
 
 Per-server UFW adds a second enforcement layer: vLLM ports only accept connections from `192.168.10.40`.
 
-# Services on Machine D
+## Services on Machine D
 
 All services run via a single `docker compose up -d` on Machine D at `/opt/<your-repo>`.
 
@@ -106,7 +96,7 @@ docker-compose.yml
                              sends email via msmtp on first failure and on recovery
 ```
 
-# Deployment
+## Deployment
 
 ### Step 1 — Configure network (do this first)
 
@@ -318,7 +308,7 @@ location /portal/ {
 ```
 Then `docker compose restart nginx`.
 
-# OpenClaw Workstation CLI
+## OpenClaw Workstation CLI
 
 OpenClaw is the workstation-side CLI used to interact with the system from a developer's Mac. It connects to the LiteLLM gateway on Machine D as an OpenAI-compatible client, exposing all model tiers through two shell aliases.
 
@@ -396,7 +386,7 @@ openclaw --base-url http://192.168.1.x:4000/v1 --model critic "Validate this rea
 }
 ```
 
-# Observability
+## Observability
 
 **Prometheus scrape targets** (all configured in `prometheus/prometheus.yml`):
 

@@ -54,14 +54,14 @@ POST /run {"query": "..."}
 
 # Agent Tiers & Model Config
 
-| Agent | Model | Quant | Hardware | Port | Context | Temp | CPU | RAM | GPU | Data IP |
-|---|---|---|---|---|---|---|---|---|---|---|
-| Orchestrator | Claude Sonnet 4.6 | — | Anthropic API | — | 1M | 0.1 | - | - | - | - |
-| Fallback Orch | Qwen3.5 27B | AWQ INT4 | Dell R740xd | 8002 | 32,768 | 0.1 | 2× Xeon Platinum 8168 | 256 GB | 2× NVIDIA GPUs | 192.168.10.20 |
-| Critic | Llama 3.3 70B | AWQ INT4 | Dell R740 | 8001 | 65,536 | 0.1 | 2× Xeon Platinum 8168 | 256 GB | 2× NVIDIA GPUs| 192.168.10.10 |
-| Sub-agent A | Qwen3.5 4B | FP16 | Dell R7920 | 8003 | 16,384 | 0.1 | 2× Xeon Silver 4110 | 256 GB | NVIDIA GPUs:0 | 192.168.10.30 |
-| Sub-agent B | Qwen3.5 4B | FP16 | Dell R7920 | 8004 | 16,384 | 0.1 | 2× Xeon Silver 4110 | 256 GB | NVIDIA GPUs:1 | 192.168.10.30 |
-| Machine D | - | - | Dell R6515 | - | - | - | 1× AMD EPYC 7713P | 256 GB | - | 192.168.10.40 |
+| Agent | Model | Quant | Hardware | Port | Context | CPU | RAM | GPU | Data IP |
+|---|---|---|---|---|---|---|---|---|---|
+| Orchestrator | Claude Sonnet 4.6 | — | Anthropic API | — | 1M | - | - | - | - |
+| Fallback Orch | Qwen3.5 27B | AWQ INT4 | Dell R740xd | 8002 | 32,768 | 2× Xeon 8168 | 256 GB | 2× NVIDIA GPUs | 192.168.10.20 |
+| Critic | Llama 3.3 70B | AWQ INT4 | Dell R740 | 8001 | 65,536 | 2× Xeon 8168 | 256 GB | 2× NVIDIA GPUs| 192.168.10.10 |
+| Sub-agent A | Qwen3.5 4B | FP16 | Dell R7920 | 8003 | 16,384 | 2× Xeon 4110 | 256 GB | NVIDIA GPUs:0 | 192.168.10.30 |
+| Sub-agent B | Qwen3.5 4B | FP16 | Dell R7920 | 8004 | 16,384 | 2× Xeon 4110 | 256 GB | NVIDIA GPUs:1 | 192.168.10.30 |
+| Machine D | - | - | Dell R6515 | - | - | 1× AMD 7713P | 256 GB | - | 192.168.10.40 |
 
 # Network
 
